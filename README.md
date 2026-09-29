@@ -20,7 +20,7 @@ figures.
 - `interactive_analysis.ipynb` — the same analyses as interactive Plotly
   HTML instead of static SVGs, via
   `be_scan.figure_plot.figure_interactive`. Not for publication — feeds
-  `webpage/`. Produces 75 HTML figures under
+  `docs/`. Produces 75 HTML figures under
   `new_outputs_interactive/<Category>/` (34 Scatterplots, 12 Boxplots, 20
   Lollipops, 2 ClusteredHeatmaps, 7 PWES). Several plot categories were
   trimmed down from earlier, larger sets per Calvin's requests (predictor-
@@ -65,17 +65,19 @@ figures.
 - `new_outputs/` — figures from `master_analysis.ipynb` (Scatterplots,
   Boxplots, Lollipops, ClusteredHeatmaps, Stability, PWES [combined
   LOF+Stability run only], PyMOL `.txt` exports).
-- `webpage/` — the interactive data page built from
-  `new_outputs_interactive/`: a static `index.html` (light/dark toggle,
-  sidebar of figure-type categories, one shared legend bar per group of
-  plots instead of a legend on every plot) plus `manifest.json` and
-  `data/` (a processed copy of every interactive figure — autosized to
-  fill its card, with domain-highlight background bands fixed to span the
-  full plot height). `Scatterplots` splits into 5 sidebar entries (WT,
-  Q575R, EZH2/EED Stability, Correlation) all backed by one
-  `data/Scatterplots/` folder. No build step needed to view it — see
-  `webpage/README.md` for regenerating `data/`/`manifest.json` after a
-  fresh notebook run, or deploying via GitHub Pages.
+- `docs/` — the interactive data page built from
+  `new_outputs_interactive/` (named `docs/`, not `webpage/`, so it can be
+  served directly as the repo's GitHub Pages source — main branch,
+  `/docs`): a static `index.html` (light/dark toggle, sidebar of
+  figure-type categories, one shared legend bar per group of plots
+  instead of a legend on every plot) plus `manifest.json` and `data/` (a
+  processed copy of every interactive figure — autosized to fill its
+  card, with domain-highlight background bands fixed to span the full
+  plot height). `Scatterplots` splits into 5 sidebar entries (WT, Q575R,
+  EZH2/EED Stability, Correlation) all backed by one `data/Scatterplots/`
+  folder. No build step needed to view it — see `docs/README.md` for
+  regenerating `data/`/`manifest.json` after a fresh notebook run, or
+  deploying via GitHub Pages.
 - No longer here (moved or deleted in the 2026-09-29 cleanup):
   `previous_results/` (the old-figure comparison target used during
   validation — no longer needed to run the pipeline; validation results

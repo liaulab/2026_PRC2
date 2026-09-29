@@ -174,16 +174,14 @@ also means it can be opened straight from this Drive folder.
 ## Publishing via GitHub Pages (optional)
 
 If you want a shareable URL instead of (or in addition to) opening the file
-locally:
-
-1. Push this `webpage/` folder's contents to a repo (or a `docs/` folder /
-   `gh-pages` branch of one — whichever this repo already uses for Pages).
-2. In the repo's Settings → Pages, point the source at that folder/branch.
-3. Done — everything is client-side, same as viewing it locally.
+locally: this folder is already named `docs/` for exactly this purpose —
+in the repo's Settings → Pages, set the source to the `main` branch,
+`/docs` folder. Push, and everything here is client-side, same as viewing
+it locally; no further build step runs on GitHub's end.
 
 ## Regenerating after re-running `interactive_analysis.ipynb`
 
-Re-run the notebook, then from `webpage/` run `python3 build_webpage.py`.
+Re-run the notebook, then from `docs/` run `python3 build_webpage.py`.
 It reads `new_outputs_interactive/`, rebuilds `data/` (suppressing the
 inline legend on files that belong to a shared-legend group, copying
 everything else unchanged), and rewrites `manifest.json`. It prints a

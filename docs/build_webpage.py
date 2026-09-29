@@ -1,6 +1,6 @@
 """
-Build webpage/data + webpage/manifest.json + the embedded MANIFEST_SEGMENTS
-in webpage/index.html from new_outputs_interactive/, with each sidebar
+Build docs/data + docs/manifest.json + the embedded MANIFEST_SEGMENTS
+in docs/index.html from new_outputs_interactive/, with each sidebar
 category split into "segments": a group of files that share one legend and
 scheme, plus (for the group's files only) their own inline Plotly legend
 patched off (layout.showlegend = False) so the shared header is the only
@@ -24,8 +24,8 @@ import plotly_json as pj
 
 PROJECT = "/home/claude/project"
 SRC = os.path.join(PROJECT, "new_outputs_interactive")
-WEBPAGE = os.path.join(PROJECT, "webpage")
-DATA = os.path.join(WEBPAGE, "data")
+DOCS = os.path.join(PROJECT, "docs")
+DATA = os.path.join(DOCS, "data")
 
 # ---------------------------------------------------------------------------
 # Legend schemes (label -> css color), determined empirically from the JSON.
@@ -339,7 +339,7 @@ def main():
             seg_out.append({"legend": seg["legend"], "files": seg["files"]})
         manifest[category] = seg_out
 
-    with open(os.path.join(WEBPAGE, "manifest.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(DOCS, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
     print(f"legend-suppressed + fill-fixed {n_suppressed} files, fill-fixed only {n_copied} files")
