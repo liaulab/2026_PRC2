@@ -1,0 +1,342 @@
+{
+  "WT Scatterplots": [
+    {
+      "legend": [
+        {
+          "label": "Missense",
+          "color": "#fdb462"
+        },
+        {
+          "label": "No Mutation/Silent",
+          "color": "#80b1d3"
+        },
+        {
+          "label": "Nonsense",
+          "color": "#c03221"
+        }
+      ],
+      "files": [
+        "EZH2-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html",
+        "EED-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html",
+        "SUZ12-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html",
+        "AEBP2-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html",
+        "JARID2-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html",
+        "MTF2-Karpas422_WT-ABE-DMSO-D0-Z-Scatterplot.html"
+      ]
+    }
+  ],
+  "Q575R Scatterplots": [
+    {
+      "legend": [
+        {
+          "label": "Missense",
+          "color": "#fdb462"
+        },
+        {
+          "label": "No Mutation/Silent",
+          "color": "#80b1d3"
+        },
+        {
+          "label": "Nonsense",
+          "color": "#c03221"
+        }
+      ],
+      "files": [
+        "EZH2-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html",
+        "EZH2-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html",
+        "EED-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html",
+        "EED-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html",
+        "SUZ12-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html",
+        "SUZ12-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html",
+        "AEBP2-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html",
+        "AEBP2-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html",
+        "JARID2-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html",
+        "JARID2-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html",
+        "MTF2-Karpas422_Q575R-ABE-DMSO-D0-Z-Scatterplot.html",
+        "MTF2-Karpas422_Q575R-ABE-DMSO-PRC2i-Z-Scatterplot.html",
+        "MTF2-Karpas422_Q575R-ABE-PRC2i-D0-Z-Scatterplot.html"
+      ]
+    }
+  ],
+  "EZH2 Stability Scatterplots": [
+    {
+      "legend": [
+        {
+          "label": "Missense",
+          "color": "#fdb462"
+        },
+        {
+          "label": "No Mutation/Silent",
+          "color": "#80b1d3"
+        },
+        {
+          "label": "Nonsense",
+          "color": "#c03221"
+        }
+      ],
+      "files": [
+        "EZH2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "EZH2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "EED-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "EED-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "SUZ12-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "SUZ12-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "AEBP2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "AEBP2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "JARID2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "JARID2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html"
+      ]
+    }
+  ],
+  "EED Stability Scatterplots": [
+    {
+      "legend": [
+        {
+          "label": "Missense",
+          "color": "#fdb462"
+        },
+        {
+          "label": "No Mutation/Silent",
+          "color": "#80b1d3"
+        },
+        {
+          "label": "Nonsense",
+          "color": "#c03221"
+        }
+      ],
+      "files": [
+        "EZH2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "EZH2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "EED-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "EED-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "SUZ12-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "SUZ12-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "AEBP2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "AEBP2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
+        "JARID2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
+        "JARID2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html"
+      ]
+    }
+  ],
+  "Correlation Scatterplots": [
+    {
+      "legend": [
+        {
+          "label": "Control",
+          "color": "#a7d5b9"
+        },
+        {
+          "label": "EED",
+          "color": "#7ccdf4"
+        },
+        {
+          "label": "EZH2",
+          "color": "#b2b0b0"
+        },
+        {
+          "label": "Essential",
+          "color": "#ffcc33"
+        },
+        {
+          "label": "SUZ12",
+          "color": "#c19ee0"
+        }
+      ],
+      "files": [
+        "DMSO-PRC2i-PRC2i-D0-ABE-correlation_scatterplot.html",
+        "DMSO-PRC2i-PRC2i-D0-CBE-correlation_scatterplot.html",
+        "GFP-EZH2-GFP-EED-ABE-correlation_scatterplot.html",
+        "GFP-EZH2-GFP-EED-CBE-correlation_scatterplot.html"
+      ]
+    },
+    {
+      "legend": [
+        {
+          "label": "Missense",
+          "color": "#fdb462"
+        },
+        {
+          "label": "No Mutation/Silent",
+          "color": "#80b1d3"
+        },
+        {
+          "label": "Nonsense",
+          "color": "#c03221"
+        }
+      ],
+      "files": [
+        "Parental-Q575R-ABE-correlation_scatterplot.html"
+      ]
+    }
+  ],
+  "Boxplots": [
+    {
+      "legend": null,
+      "files": [
+        "WT_Boxplot_ByGene.html",
+        "WT_Boxplot_ByMutation.html",
+        "Q575R_Boxplot_ByGene.html",
+        "Q575R_Boxplot_ByMutation.html",
+        "Stability_Boxplot_ByGene.html",
+        "Stability_Boxplot_ByMutation.html",
+        "PRC2_Quartile_WT_Q575R_Density.html",
+        "MTF2_WT_DMSOD0_Boxplot_ByMutation.html",
+        "MTF2_Q575R_DMSOD0_Boxplot_ByMutation.html",
+        "MTF2_Q575R_DMSOPRC2i_Boxplot_ByMutation.html"
+      ]
+    },
+    {
+      "legend": [
+        {
+          "label": "AEBP2",
+          "color": "#1fc1c1"
+        },
+        {
+          "label": "Control",
+          "color": "#f0c93d"
+        },
+        {
+          "label": "EED",
+          "color": "#7ccdf4"
+        },
+        {
+          "label": "EZH2",
+          "color": "#b2b0b0"
+        },
+        {
+          "label": "Essential",
+          "color": "#91caa9"
+        },
+        {
+          "label": "JARID2",
+          "color": "#ff9999"
+        },
+        {
+          "label": "SUZ12",
+          "color": "#c19ee0"
+        }
+      ],
+      "files": [
+        "PRC2_Quartile_WT_Q575R_Boxplot.html",
+        "WT_Resistance_Boxplot.html"
+      ]
+    }
+  ],
+  "Lollipops": [
+    {
+      "legend": [
+        {
+          "label": "Q575R",
+          "color": "#ff5a5a"
+        },
+        {
+          "label": "WT",
+          "color": "#feb1c6"
+        },
+        {
+          "label": "GFP-EED",
+          "color": "#afffb9"
+        },
+        {
+          "label": "GFP-EZH2",
+          "color": "#5aa9e6"
+        }
+      ],
+      "files": [
+        "LOF_Stability_ABE_EZH2_Lollipop_Split.html",
+        "LOF_Stability_ABE_EED_Lollipop_Split.html",
+        "LOF_Stability_ABE_SUZ12_Lollipop_Split.html",
+        "LOF_Stability_ABE_AEBP2_Lollipop_Split.html",
+        "LOF_Stability_ABE_JARID2_Lollipop_Split.html"
+      ]
+    },
+    {
+      "legend": [
+        {
+          "label": "Q575R CBE39",
+          "color": "#ff5a5a"
+        },
+        {
+          "label": "WT CBE39",
+          "color": "#ffd55a"
+        },
+        {
+          "label": "WT CBE6",
+          "color": "#feb1c6"
+        },
+        {
+          "label": "GFP-EED",
+          "color": "#afffb9"
+        },
+        {
+          "label": "GFP-EZH2",
+          "color": "#5aa9e6"
+        }
+      ],
+      "files": [
+        "LOF_Stability_CBE_EZH2_Lollipop_Split.html",
+        "LOF_Stability_CBE_EED_Lollipop_Split.html",
+        "LOF_Stability_CBE_SUZ12_Lollipop_Split.html",
+        "LOF_Stability_CBE_AEBP2_Lollipop_Split.html",
+        "LOF_Stability_CBE_JARID2_Lollipop_Split.html"
+      ]
+    },
+    {
+      "legend": [
+        {
+          "label": "ABE",
+          "color": "#feb1c6"
+        }
+      ],
+      "files": [
+        "Q575R_ABE_EZH2_Lollipop_Split.html",
+        "Q575R_ABE_EED_Lollipop_Split.html",
+        "Q575R_ABE_SUZ12_Lollipop_Split.html",
+        "Q575R_ABE_AEBP2_Lollipop_Split.html",
+        "Q575R_ABE_JARID2_Lollipop_Split.html"
+      ]
+    },
+    {
+      "legend": [
+        {
+          "label": "CBE39",
+          "color": "#feb1c6"
+        },
+        {
+          "label": "CBE6",
+          "color": "#5aa9e6"
+        }
+      ],
+      "files": [
+        "Q575R_CBE_EZH2_Lollipop_Split.html",
+        "Q575R_CBE_EED_Lollipop_Split.html",
+        "Q575R_CBE_SUZ12_Lollipop_Split.html",
+        "Q575R_CBE_AEBP2_Lollipop_Split.html",
+        "Q575R_CBE_JARID2_Lollipop_Split.html"
+      ]
+    }
+  ],
+  "ClusteredHeatmaps": [
+    {
+      "legend": null,
+      "files": [
+        "ABE_ClusteredHeatmap_K6_Raw_Cutoff3.html",
+        "CBE_ClusteredHeatmap_K6_Raw_Cutoff3.html"
+      ]
+    }
+  ],
+  "PWES": [
+    {
+      "legend": null,
+      "files": [
+        "PWES-6WKR-LOF_Stability-PWES_heatmap.html",
+        "PWES-6WKR-LOF_Stability-cluster_boxplots.html",
+        "PWES-6WKR-LOF_Stability-cluster_clustermap.html",
+        "PWES-6WKR-LOF_Stability-cluster_histogram.html",
+        "PWES-6WKR-LOF_Stability-EZH2-cluster_scatterplots.html",
+        "PWES-6WKR-LOF_Stability-EED-cluster_scatterplots.html",
+        "PWES-6WKR-LOF_Stability-SUZ12-cluster_scatterplots.html"
+      ]
+    }
+  ]
+}

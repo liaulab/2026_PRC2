@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PRC2 base-editor screen &mdash; interactive figures</title>
+<style>
+  :root {
+    --bg: #f7f7f8;
+    --panel: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --border: #d9d9d9;
+    --accent: #4C72B0;
+    --accent-text: #ffffff;
+    --nav-hover: #eceef1;
+  }
+  html[data-theme="dark"] {
+    --bg: #16181c;
+    --panel: #ffffff;      /* the plot card itself stays light: figure axis
+                              text/ticks are drawn black and are only
+                              legible on a light background */
+    --text: #e8e8e8;
+    --muted: #9a9a9a;
+    --border: #33363c;
+    --accent: #7CCDF4;
+    --accent-text: #10131a;
+    --nav-hover: #1f2329;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-size: 1.05rem;
+    margin: 0;
+    font-weight: 600;
+  }
+  header p {
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  #theme-toggle {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  #layout {
+    flex: 1 1 auto;
+    display: flex;
+    min-height: 0;
+  }
+  nav#sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 10px 0;
+  }
+  .nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: 0;
+    padding: 9px 20px;
+    font-size: 0.87rem;
+    color: var(--text);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover {
+    background: var(--nav-hover);
+  }
+  .nav-item.active {
+    border-left-color: var(--accent);
+    background: var(--nav-hover);
+    font-weight: 600;
+  }
+  .nav-count {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  main {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 20px 28px 48px;
+  }
+  #category-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0 0 18px;
+    max-width: 90ch;
+  }
+  #figures-container {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+  .figure-grid {
+    display: grid;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .legend-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    padding: 8px 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: var(--text);
+  }
+  .legend-swatch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .legend-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+  }
+  .segment-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .figure-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .figure-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    color: #1a1a1a;
+    background: #fbfbfc;
+    flex-shrink: 0;
+  }
+  .figure-frame-wrap {
+    width: 100%;
+    overflow: hidden;
+    flex: 1 1 auto;
+  }
+  .figure-frame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  #empty-state {
+    color: #8a8a8a;
+    font-size: 0.9rem;
+    padding: 60px 0;
+    grid-column: 1 / -1;
+  }
+  footer {
+    flex-shrink: 0;
+    padding: 6px 20px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>PRC2 base-editor screen &mdash; interactive figures</h1>
+    <p>Companion to the manuscript's static figures.</p>
+  </div>
+  <button id="theme-toggle" type="button">Dark mode</button>
+</header>
+
+<div id="layout">
+  <nav id="sidebar"></nav>
+  <main id="main-content">
+    <div id="category-desc"></div>
+    <div id="figures-container">
+      <div id="empty-state">Loading figure list&hellip;</div>
+    </div>
+  </main>
+</div>
+
+<footer>
+  Generated from <code>interactive_analysis.ipynb</code>. Figure labels, axes and hover text carry the
+  full detail for each plot; this page is just a way to get to them.
+</footer>
+
+<script>
+var MANIFEST_SEGMENTS = {"WT Scatterplots":[{"legend":[{"label":"Missense","color":"#fdb462"},{"label":"No Mutation/Silent","color":"#80b1d3"},{"label":"Nonsense","color":"#c03221"}],"files":["EZH2-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html","EED-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html","SUZ12-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html","AEBP2-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html","JARID2-Karpas422_WT-ABE-CBE6b-DMSO-D0-Z-Scatterplot.html","MTF2-Karpas422_WT-ABE-DMSO-D0-Z-Scatterplot.html"]}],"Q575R Scatterplots":[{"legend":[{"label":"Missense","color":"#fdb462"},{"label":"No Mutation/Silent","color":"#80b1d3"},{"label":"Nonsense","color":"#c03221"}],"files":["EZH2-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html","EZH2-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html","EED-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html","EED-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html","SUZ12-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html","SUZ12-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html","AEBP2-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html","AEBP2-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html","JARID2-Karpas422_Q575R-ABE-CBE3-DMSO-PRC2i-Z-Scatterplot.html","JARID2-Karpas422_Q575R-ABE-CBE3-PRC2i-D0-Z-Scatterplot5.html","MTF2-Karpas422_Q575R-ABE-DMSO-D0-Z-Scatterplot.html","MTF2-Karpas422_Q575R-ABE-DMSO-PRC2i-Z-Scatterplot.html","MTF2-Karpas422_Q575R-ABE-PRC2i-D0-Z-Scatterplot.html"]}],"EZH2 Stability Scatterplots":[{"legend":[{"label":"Missense","color":"#fdb462"},{"label":"No Mutation/Silent","color":"#80b1d3"},{"label":"Nonsense","color":"#c03221"}],"files":["EZH2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","EZH2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","EED-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","EED-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","SUZ12-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","SUZ12-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","AEBP2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","AEBP2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","JARID2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","JARID2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html"]}],"EED Stability Scatterplots":[{"legend":[{"label":"Missense","color":"#fdb462"},{"label":"No Mutation/Silent","color":"#80b1d3"},{"label":"Nonsense","color":"#c03221"}],"files":["EZH2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","EZH2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","EED-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","EED-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","SUZ12-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","SUZ12-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","AEBP2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","AEBP2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html","JARID2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html","JARID2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html"]}],"Correlation Scatterplots":[{"legend":[{"label":"Control","color":"#a7d5b9"},{"label":"EED","color":"#7ccdf4"},{"label":"EZH2","color":"#b2b0b0"},{"label":"Essential","color":"#ffcc33"},{"label":"SUZ12","color":"#c19ee0"}],"files":["DMSO-PRC2i-PRC2i-D0-ABE-correlation_scatterplot.html","DMSO-PRC2i-PRC2i-D0-CBE-correlation_scatterplot.html","GFP-EZH2-GFP-EED-ABE-correlation_scatterplot.html","GFP-EZH2-GFP-EED-CBE-correlation_scatterplot.html"]},{"legend":[{"label":"Missense","color":"#fdb462"},{"label":"No Mutation/Silent","color":"#80b1d3"},{"label":"Nonsense","color":"#c03221"}],"files":["Parental-Q575R-ABE-correlation_scatterplot.html"]}],"Boxplots":[{"legend":null,"files":["WT_Boxplot_ByGene.html","WT_Boxplot_ByMutation.html","Q575R_Boxplot_ByGene.html","Q575R_Boxplot_ByMutation.html","Stability_Boxplot_ByGene.html","Stability_Boxplot_ByMutation.html","PRC2_Quartile_WT_Q575R_Density.html","MTF2_WT_DMSOD0_Boxplot_ByMutation.html","MTF2_Q575R_DMSOD0_Boxplot_ByMutation.html","MTF2_Q575R_DMSOPRC2i_Boxplot_ByMutation.html"]},{"legend":[{"label":"AEBP2","color":"#1fc1c1"},{"label":"Control","color":"#f0c93d"},{"label":"EED","color":"#7ccdf4"},{"label":"EZH2","color":"#b2b0b0"},{"label":"Essential","color":"#91caa9"},{"label":"JARID2","color":"#ff9999"},{"label":"SUZ12","color":"#c19ee0"}],"files":["PRC2_Quartile_WT_Q575R_Boxplot.html","WT_Resistance_Boxplot.html"]}],"Lollipops":[{"legend":[{"label":"Q575R","color":"#ff5a5a"},{"label":"WT","color":"#feb1c6"},{"label":"GFP-EED","color":"#afffb9"},{"label":"GFP-EZH2","color":"#5aa9e6"}],"files":["LOF_Stability_ABE_EZH2_Lollipop_Split.html","LOF_Stability_ABE_EED_Lollipop_Split.html","LOF_Stability_ABE_SUZ12_Lollipop_Split.html","LOF_Stability_ABE_AEBP2_Lollipop_Split.html","LOF_Stability_ABE_JARID2_Lollipop_Split.html"]},{"legend":[{"label":"Q575R CBE39","color":"#ff5a5a"},{"label":"WT CBE39","color":"#ffd55a"},{"label":"WT CBE6","color":"#feb1c6"},{"label":"GFP-EED","color":"#afffb9"},{"label":"GFP-EZH2","color":"#5aa9e6"}],"files":["LOF_Stability_CBE_EZH2_Lollipop_Split.html","LOF_Stability_CBE_EED_Lollipop_Split.html","LOF_Stability_CBE_SUZ12_Lollipop_Split.html","LOF_Stability_CBE_AEBP2_Lollipop_Split.html","LOF_Stability_CBE_JARID2_Lollipop_Split.html"]},{"legend":[{"label":"ABE","color":"#feb1c6"}],"files":["Q575R_ABE_EZH2_Lollipop_Split.html","Q575R_ABE_EED_Lollipop_Split.html","Q575R_ABE_SUZ12_Lollipop_Split.html","Q575R_ABE_AEBP2_Lollipop_Split.html","Q575R_ABE_JARID2_Lollipop_Split.html"]},{"legend":[{"label":"CBE39","color":"#feb1c6"},{"label":"CBE6","color":"#5aa9e6"}],"files":["Q575R_CBE_EZH2_Lollipop_Split.html","Q575R_CBE_EED_Lollipop_Split.html","Q575R_CBE_SUZ12_Lollipop_Split.html","Q575R_CBE_AEBP2_Lollipop_Split.html","Q575R_CBE_JARID2_Lollipop_Split.html"]}],"ClusteredHeatmaps":[{"legend":null,"files":["ABE_ClusteredHeatmap_K6_Raw_Cutoff3.html","CBE_ClusteredHeatmap_K6_Raw_Cutoff3.html"]}],"PWES":[{"legend":null,"files":["PWES-6WKR-LOF_Stability-PWES_heatmap.html","PWES-6WKR-LOF_Stability-cluster_boxplots.html","PWES-6WKR-LOF_Stability-cluster_clustermap.html","PWES-6WKR-LOF_Stability-cluster_histogram.html","PWES-6WKR-LOF_Stability-EZH2-cluster_scatterplots.html","PWES-6WKR-LOF_Stability-EED-cluster_scatterplots.html","PWES-6WKR-LOF_Stability-SUZ12-cluster_scatterplots.html"]}]}
+;
+
+// Most categories keep their figures under data/<Category>/; the five
+// scatterplot categories are all views into the single data/Scatterplots/
+// folder (the stability ones share files on purpose -- each shows both the
+// GFP-EZH2 and GFP-EED constructs together, so it is listed under both).
+var FOLDER_OVERRIDE = {
+  "WT Scatterplots": "Scatterplots",
+  "Q575R Scatterplots": "Scatterplots",
+  "EZH2 Stability Scatterplots": "Scatterplots",
+  "EED Stability Scatterplots": "Scatterplots",
+  "Correlation Scatterplots": "Scatterplots"
+};
+
+// Per-category grid/height rules. "columns" sets the container's
+// grid-template-columns; "height"/"minHeight" size a normal card.
+// "sizeRules" lets specific files span the full row width at a height set
+// by "aspectRatio" (e.g. "1 / 1" for a square, "2 / 1" for half-height)
+// instead of the category's normal fixed height.
+var LAYOUT = {
+  "ClusteredHeatmaps": {
+    columns: "repeat(auto-fit, minmax(380px, 1fr))",
+    height: "calc(100vh - 200px)",
+    minHeight: "560px"
+  },
+  "PWES": {
+    columns: "repeat(2, 1fr)",
+    height: "460px",
+    minHeight: "460px",
+    sizeRules: [
+      { match: /PWES_heatmap|cluster_clustermap/, aspectRatio: "1 / 1" },
+      { match: /cluster_boxplots|cluster_histogram/, aspectRatio: "2 / 1" }
+    ]
+  }
+};
+var DEFAULT_LAYOUT = {
+  columns: "repeat(auto-fit, minmax(460px, 1fr))",
+  height: "480px",
+  minHeight: "480px"
+};
+</script>
+<script>
+(function () {
+  "use strict";
+
+  // One short, non-redundant line per figure type -- the plots' own axis
+  // labels, legends and hover text already carry the analytical detail.
+  var DESCRIPTIONS = {
+    "WT Scatterplots": "Per-residue base-editing Z-scores in the WT background, by amino-acid position.",
+    "Q575R Scatterplots": "Per-residue base-editing Z-scores in the Q575R background, by amino-acid position.",
+    "EZH2 Stability Scatterplots": "Per-residue abundance Z-scores from the GFP-tagged stability screen (GFP-EZH2 and GFP-EED constructs shown together; also listed under EED Stability).",
+    "EED Stability Scatterplots": "Per-residue abundance Z-scores from the GFP-tagged stability screen (GFP-EZH2 and GFP-EED constructs shown together; also listed under EZH2 Stability).",
+    "Correlation Scatterplots": "Pairwise correlations between screens and between screen scores and predicted-ddG tools.",
+    "Boxplots": "Z-score distributions grouped by editor, gene, or mutation type.",
+    "Lollipops": "Per-residue hit calls along the protein sequence (Q575R LOF, and LOF vs. stability), split by screen.",
+    "ClusteredHeatmaps": "K-means clusters (k=6) of guides across the four screens.",
+    "PWES": "3D-proximity (PWES) clustering of hit residues against the 6WKR structure. The heatmap, boxplots and histogram are the full clustering result; the three scatterplots below break it out per gene."
+  };
+
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var sidebar = document.getElementById("sidebar");
+  var descBox = document.getElementById("category-desc");
+  var container = document.getElementById("figures-container");
+
+  function setTheme(mode) {
+    root.setAttribute("data-theme", mode);
+    toggle.textContent = mode === "dark" ? "Light mode" : "Dark mode";
+    try { localStorage.setItem("prc2-theme", mode); } catch (e) {}
+  }
+  var savedTheme = "light";
+  try {
+    savedTheme = localStorage.getItem("prc2-theme")
+      || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  } catch (e) {}
+  setTheme(savedTheme);
+  toggle.addEventListener("click", function () {
+    setTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+
+  function niceName(fname) {
+    return fname.replace(/\.html\$/, "").replace(/[_-]+/g, " ");
+  }
+
+  // As exported by interactive_analysis.ipynb, each figure's layout has an
+  // explicit (small) pixel width/height baked in, and config.responsive:true
+  // alone does NOT override that -- the plot only ever draws at its tiny
+  // native export size, no matter how big the card is. build_webpage.py
+  // fixes this at build time (drops layout.width/height, sets
+  // layout.autosize = true, and rewrites the outer wrapper div's inline
+  // style to 100%/100%) so every figure in data/ already fills its
+  // container from the very first paint -- no runtime resize trick needed.
+  // This just does the small polish of zeroing the iframe body's margin
+  // once it loads.
+  function attachResponsiveFill(frame) {
+    frame.onload = function () {
+      try {
+        var doc = frame.contentDocument;
+        if (doc && doc.body) {
+          doc.body.style.margin = "0";
+          doc.body.style.overflow = "hidden";
+        }
+      } catch (e) {
+        // cross-origin or other failure -- leave the figure as exported
+      }
+    };
+  }
+
+  // category count = total files across all of its segments
+  function categoryCount(category) {
+    var segs = MANIFEST_SEGMENTS[category] || [];
+    var n = 0;
+    segs.forEach(function (seg) { n += seg.files.length; });
+    return n;
+  }
+
+  function buildLegendBar(legend) {
+    var bar = document.createElement("div");
+    bar.className = "legend-bar";
+    legend.forEach(function (entry) {
+      var item = document.createElement("span");
+      item.className = "legend-swatch";
+      var dot = document.createElement("span");
+      dot.className = "legend-dot";
+      dot.style.background = entry.color || "#999";
+      var label = document.createElement("span");
+      label.textContent = entry.label;
+      item.appendChild(dot);
+      item.appendChild(label);
+      bar.appendChild(item);
+    });
+    return bar;
+  }
+
+  function matchSizeRule(layout, fname) {
+    if (!layout.sizeRules) return null;
+    for (var i = 0; i < layout.sizeRules.length; i++) {
+      if (layout.sizeRules[i].match.test(fname)) return layout.sizeRules[i];
+    }
+    return null;
+  }
+
+  function buildFigureGrid(category, folder, layout, files) {
+    var grid = document.createElement("div");
+    grid.className = "figure-grid";
+    grid.style.gridTemplateColumns = layout.columns;
+
+    files.forEach(function (fname) {
+      var rule = matchSizeRule(layout, fname);
+      var card = document.createElement("div");
+      card.className = "figure-card";
+
+      var title = document.createElement("div");
+      title.className = "figure-title";
+      title.textContent = niceName(fname);
+      card.appendChild(title);
+
+      var wrap = document.createElement("div");
+      wrap.className = "figure-frame-wrap";
+      if (rule) {
+        // Full row width, height set by aspect ratio rather than a fixed
+        // pixel height -- 1/1 for a square, 2/1 for half-height, etc.
+        card.style.gridColumn = "1 / -1";
+        wrap.style.flex = "0 0 auto";
+        wrap.style.aspectRatio = rule.aspectRatio;
+        wrap.style.height = "auto";
+        wrap.style.minHeight = "0";
+      } else {
+        wrap.style.height = layout.height;
+        wrap.style.minHeight = layout.minHeight;
+      }
+
+      var frame = document.createElement("iframe");
+      frame.className = "figure-frame";
+      frame.src = "data/" + encodeURIComponent(folder) + "/" + encodeURIComponent(fname);
+      attachResponsiveFill(frame);
+
+      wrap.appendChild(frame);
+      card.appendChild(wrap);
+      grid.appendChild(card);
+    });
+    return grid;
+  }
+
+  // Each category is a list of "segments" -- a group of figures that share
+  // one color scheme. A segment with a legend gets a static color-key bar
+  // rendered once, above its grid of figures (those figures' own inline
+  // Plotly legends were suppressed when data/ was built, so the shared bar
+  // is the only legend shown for them). A segment with legend: null is
+  // rendered as-is -- either it has no meaningful inline legend to begin
+  // with, or its own legend is unique to that one figure and was left alone.
+  function renderCategory(category) {
+    container.innerHTML = "";
+    descBox.textContent = DESCRIPTIONS[category] || "";
+    var segments = MANIFEST_SEGMENTS[category] || [];
+    var folder = FOLDER_OVERRIDE[category] || category;
+    var layout = LAYOUT[category] || DEFAULT_LAYOUT;
+
+    var totalFiles = 0;
+    segments.forEach(function (seg) { totalFiles += seg.files.length; });
+    if (totalFiles === 0) {
+      var empty = document.createElement("div");
+      empty.id = "empty-state";
+      empty.textContent = "No figures found.";
+      container.appendChild(empty);
+      return;
+    }
+
+    segments.forEach(function (seg) {
+      if (seg.files.length === 0) { return; }
+      var block = document.createElement("div");
+      block.className = "segment-block";
+      if (seg.legend) {
+        block.appendChild(buildLegendBar(seg.legend));
+      }
+      block.appendChild(buildFigureGrid(category, folder, layout, seg.files));
+      container.appendChild(block);
+    });
+  }
+
+  function selectCategory(category) {
+    Array.prototype.forEach.call(sidebar.querySelectorAll(".nav-item"), function (btn) {
+      btn.classList.toggle("active", btn.dataset.category === category);
+    });
+    renderCategory(category);
+  }
+
+  // The figure list is embedded directly (not fetched) so this page works by
+  // double-clicking it -- a fetch() of a sibling JSON file is blocked by the
+  // browser on a plain file:// page, which is exactly what a static site like
+  // this one is opened as most of the time.
+  var categories = Object.keys(MANIFEST_SEGMENTS);
+  if (categories.length === 0) {
+    container.innerHTML = '<div id="empty-state">No figures found.</div>';
+  } else {
+    categories.forEach(function (c) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "nav-item";
+      btn.dataset.category = c;
+      btn.innerHTML = c + ' <span class="nav-count">(' + categoryCount(c) + ')</span>';
+      btn.addEventListener("click", function () {
+        selectCategory(c);
+      });
+      sidebar.appendChild(btn);
+    });
+    selectCategory(categories[0]);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+# Environment for master_analysis.ipynb and interactive_analysis.ipynb.
+#
+# Both notebooks are run fresh in Google Colab each time, so there's no
+# persistent environment to maintain -- the first cell of each notebook
+# pip-installs this exact list (see the "Environment setup" cell). This
+# file is the single source of truth for that cell and can also be used
+# locally with `conda env create -f environment.yml` or
+# `pip install -r <(python -c "...")` if you'd rather run outside Colab.
+#
+# PyMOL itself (needed only to actually run load_bfact.py inside a PyMOL
+# session, never inside these notebooks) is NOT included here -- it needs
+# its own Schrodinger/conda PyMOL Python distribution and can't be pip
+# installed into a normal environment. See README.md.
+
+name: prc2-be-scan
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - numpy
+      - pandas
+      - matplotlib
+      - seaborn
+      - scipy
+      - statsmodels
+      - scikit-learn
+      - biopandas
+      - biopython
+      - plotly
+      - openpyxl
+      - be_scan @ git+https://github.com/liaulab/be-scan.git
