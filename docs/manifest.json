@@ -58,37 +58,7 @@
       ]
     }
   ],
-  "EZH2 Stability Scatterplots": [
-    {
-      "legend": [
-        {
-          "label": "Missense",
-          "color": "#fdb462"
-        },
-        {
-          "label": "No Mutation/Silent",
-          "color": "#80b1d3"
-        },
-        {
-          "label": "Nonsense",
-          "color": "#c03221"
-        }
-      ],
-      "files": [
-        "EZH2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-        "EZH2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-        "EED-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-        "EED-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-        "SUZ12-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-        "SUZ12-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-        "AEBP2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-        "AEBP2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-        "JARID2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-        "JARID2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html"
-      ]
-    }
-  ],
-  "EED Stability Scatterplots": [
+  "Stability Scatterplots": [
     {
       "legend": [
         {
@@ -330,8 +300,8 @@
       "legend": null,
       "files": [
         "PWES-6WKR-LOF_Stability-PWES_heatmap.html",
-        "PWES-6WKR-LOF_Stability-cluster_boxplots.html",
         "PWES-6WKR-LOF_Stability-cluster_clustermap.html",
+        "PWES-6WKR-LOF_Stability-cluster_boxplots.html",
         "PWES-6WKR-LOF_Stability-cluster_histogram.html",
         "PWES-6WKR-LOF_Stability-EZH2-cluster_scatterplots.html",
         "PWES-6WKR-LOF_Stability-EED-cluster_scatterplots.html",

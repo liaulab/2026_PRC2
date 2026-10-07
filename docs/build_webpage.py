@@ -115,24 +115,12 @@ CATEGORIES = {
             ]},
         ],
     },
-    "EZH2 Stability Scatterplots": {
-        "folder": "Scatterplots",
-        "segments": [
-            {"legend": MUT_TYPE_LEGEND, "files": [
-                "EZH2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-                "EZH2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-                "EED-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-                "EED-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-                "SUZ12-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-                "SUZ12-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-                "AEBP2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-                "AEBP2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-                "JARID2-GFP_EZH2_EED_K562-ABE-lowGFP-unsorted-Z-Scatterplot.html",
-                "JARID2-GFP_EZH2_EED_K562-CBE-lowGFP-unsorted-Z-Scatterplot.html",
-            ]},
-        ],
-    },
-    "EED Stability Scatterplots": {
+    # Was split into separate "EZH2 Stability Scatterplots" / "EED Stability
+    # Scatterplots" sidebar entries pointing at the same 10 files (each shows
+    # both GFP-EZH2 and GFP-EED constructs together); merged into one
+    # "Stability Scatterplots" entry per Calvin's 2026-10-07 request, since
+    # the underlying data was always identical either way.
+    "Stability Scatterplots": {
         "folder": "Scatterplots",
         "segments": [
             {"legend": MUT_TYPE_LEGEND, "files": [
@@ -206,9 +194,12 @@ CATEGORIES = {
         "folder": "PWES",
         "segments": [
             {"legend": None, "files": [
+                # The two large heatmaps come first, adjacent, so index.html's
+                # PWES sizeRules can place them side by side at the same size
+                # at the top of the page.
                 "PWES-6WKR-LOF_Stability-PWES_heatmap.html",
-                "PWES-6WKR-LOF_Stability-cluster_boxplots.html",
                 "PWES-6WKR-LOF_Stability-cluster_clustermap.html",
+                "PWES-6WKR-LOF_Stability-cluster_boxplots.html",
                 "PWES-6WKR-LOF_Stability-cluster_histogram.html",
                 "PWES-6WKR-LOF_Stability-EZH2-cluster_scatterplots.html",
                 "PWES-6WKR-LOF_Stability-EED-cluster_scatterplots.html",

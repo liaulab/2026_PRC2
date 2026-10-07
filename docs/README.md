@@ -7,15 +7,17 @@ required, just more rows as the window narrows) plus `data/<Category>/`
 (one HTML file per interactive figure, copied straight from
 `interactive_analysis.ipynb`'s `new_outputs_interactive/`).
 
-The sidebar has 9 entries. `Boxplots`, `Lollipops`, `ClusteredHeatmaps` and
+The sidebar has 8 entries. `Boxplots`, `Lollipops`, `ClusteredHeatmaps` and
 `PWES` map 1:1 to their `new_outputs_interactive/` subfolder. `Scatterplots`
-is split into 5 sidebar categories — `WT Scatterplots`, `Q575R Scatterplots`,
-`EZH2 Stability Scatterplots`, `EED Stability Scatterplots` and
-`Correlation Scatterplots` — that all point at the single
-`data/Scatterplots/` folder (see `FOLDER_OVERRIDE` in `index.html`); the
-10 combined per-gene stability scatterplots (each already shows both the
-GFP-EZH2 and GFP-EED constructs together) are listed under both stability
-categories rather than split into separate plots.
+is split into 4 sidebar categories — `WT Scatterplots`, `Q575R Scatterplots`,
+`Stability Scatterplots` and `Correlation Scatterplots` — that all point at
+the single `data/Scatterplots/` folder (see `FOLDER_OVERRIDE` in
+`index.html`); the 10 combined per-gene stability scatterplots (each already
+shows both the GFP-EZH2 and GFP-EED constructs together) live under the one
+`Stability Scatterplots` entry (was split into separate `EZH2 Stability
+Scatterplots` / `EED Stability Scatterplots` entries pointing at the same
+files -- merged per Calvin's 2026-10-07 request, since the data was always
+identical either way).
 
 Per a 2026-09-28 request: `Lollipops` now only contains the screen-derived
 lollipops (`Q575R_*`, `LOF_Stability_*`); the FoldX/ThermoMPNN
@@ -146,7 +148,7 @@ size for everything):
   minmax(460px, 1fr)` at 480px card height.
 
 Also fixed this round: the gene-order sort for the split scatterplot
-categories (`WT Scatterplots`, `Q575R Scatterplots`, `EZH2/EED Stability
+categories (`WT Scatterplots`, `Q575R Scatterplots`, `Stability
 Scatterplots`) had silently fallen back to alphabetical order, because the
 stability-scatterplot filenames all contain the substring `GFP_EZH2_EED_K562`
 (the construct name), so a naive "does the filename contain EZH2"

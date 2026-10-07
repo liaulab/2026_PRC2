@@ -1,42 +1,3 @@
-"""
-Structural-enrichment analyses ported from ``figures_ycm_xyh_v2.ipynb`` (NB2).
-
-These are the analyses that ``be_scan`` has no equivalent for and that NB1 did
-not cover: the Fisher/odds-ratio enrichment pipeline and its forest plots, the
-hit-vs-non-hit histogram (dist) plots, the 20x20 substitution matrix, the
-quantile-stratified boxplot/stripplot, and the split-violin plot of stability
-predictors. Restyled to match ``be_scan.figure_plot`` conventions (type hints,
-docstrings, option-object driven where practical) and parametrized so nothing
-writes to a hard-coded path.
-
-Data access
------------
-Everything that needs the residue-level structural-feature table calls
-:func:`code.data_loading.load_mutation_level_data`, which raises a clear
-``FileNotFoundError`` when the (not-yet-supplied) ``mutation_level_data.tsv`` is
-absent (errors.md E-02). That error is deliberately **not** swallowed here --
-the notebook layer wraps the affected subsection in ``try/except
-FileNotFoundError`` and prints a skip message. The violin and quantile-boxplot
-functions instead use ``load_sgrna_level`` (present in the repo) and run for
-real.
-
-Notes on the port (see errors.md)
-----------------------------------
-* E-13 (resolved): NB2 defined ``plot_distplot_on_wild_to_mutant_merged_v4``
-  twice, in cells 21 and 23. Cell 22's call (the only call site in the
-  notebook) runs *before* cell 23's redefinition, so it always executed the
-  cell-21 version; the cell-23 version was dead code, never actually run.
-  This port keeps one definition, matching cell 21's behavior (no legend,
-  single ``.svg`` output, 0.7cm panel width, ``Others`` sorted last) by
-  default, with ``add_legend``/``save_png`` kwargs for the cell-23 look if
-  ever wanted. There is no old figure anywhere in ``previous_results/`` for
-  this function (or the rest of this odds-ratio/forest-plot subsection), so
-  neither version could be checked against a reference either way.
-* E-15: the duplicate ``("Structural region", "Interface")`` key in
-  ``main_order_map`` is removed.
-* E-16: the dead ``mCSM-PPI`` scatter branch is not ported.
-"""
-
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
@@ -49,6 +10,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import pandas as pd
 from scipy.stats import fisher_exact, norm, mannwhitneyu
+import seaborn as sns
 
 from be_scan.figure_plot.figure_classes import AxisLabelOpts, AXIS
 
@@ -79,7 +41,8 @@ AA_ORDER = ['K', 'R', 'H', 'D', 'E', 'S', 'T', 'N', 'Q', 'C',
 # ---------------------------------------------------------------------------
 
 def calculate_odds_ratio_with_ci(data, alpha: float = 0.05) -> Dict[str, Optional[float]]:
-    """Odds ratio, 95% CI and Fisher's-exact p-value for a 2x2 table.
+    """
+    Odds ratio, 95% CI and Fisher's-exact p-value for a 2x2 table.
 
     Args:
         data: a 2x2 contingency table (list-of-lists or ``np.ndarray``).
@@ -103,7 +66,7 @@ def calculate_odds_ratio_with_ci(data, alpha: float = 0.05) -> Dict[str, Optiona
         ci_high = np.exp(log_or + z * se_log_or)
         return {"odds_ratio": odds_ratio, "ci_low": ci_low,
                 "ci_high": ci_high, "p_value": p_value}
-    except Exception as e:  # noqa: BLE001 - preserve NB2 behavior
+    except Exception as e: 
         print(f"An error occurred during calculation: {e}")
         return {"odds_ratio": None, "ci_low": None, "ci_high": None, "p_value": None}
 
@@ -114,11 +77,8 @@ def convert_to_binary(
     continuous=False,
     range_list=False,
 ) -> pd.DataFrame:
-    """One-hot / range-binned binary indicator columns for ``column_name``.
-
-    Mirrors NB2: with ``continuous`` a list of thresholds, produces ``< t``
-    indicators; with ``range_list`` a list of ``"lo~hi"`` strings, produces
-    half-open ``[lo, hi)`` indicators; otherwise one column per unique value.
+    """
+    One-hot / range-binned binary indicator columns for ``column_name``.
     """
     content_list = input_pd[column_name].to_list()
 
@@ -159,12 +119,8 @@ def run_odds_ratio_test_on_all_conditions(
     skip_binary: bool = False,
     label: str = "lowGFP-unsorted_Zscore_controls",
 ) -> list:
-    """One-vs-rest odds-ratio tests for every category of ``column_name``.
-
-    Splits rows into hits (``label`` > ``zvalue``) and non-hits, builds a 2x2
-    table of each category against all others, and runs
-    :func:`calculate_odds_ratio_with_ci` with a Bonferroni-adjusted p-value.
-    Returns a list of ``[category, table, stats_dict]`` entries.
+    """
+    One-vs-rest odds-ratio tests for every category of ``column_name``.
     """
     result_pd = result_pd[result_pd[column_name].notna()]
 
@@ -213,7 +169,9 @@ def run_odds_ratio_test_on_all_conditions(
 
 
 def _process_results(result_list: list, result: list, feature_name: str) -> None:
-    """Flatten one feature's OR test entries into ``result_list`` (NB2 helper)."""
+    """
+    Flatten one feature's OR test entries into ``result_list``. 
+    """
     if not result:
         return
     for entry in result:
@@ -234,12 +192,8 @@ def get_mutation_level_OR_table_tsv(
     out_tsv: Union[str, Path] = "odds_ratio_test_2.0_ALL.tsv",
     label: str = "max_lowGFP-unsorted_Zscore_controls",
 ) -> pd.DataFrame:
-    """Run the full odds-ratio test battery and write the result TSV.
-
-    Ports NB2's ``get_mutation_level_OR_table_tsv``: categorical features,
-    ASA/AlphaMissense/energy range features, contacting-residue interaction
-    features and the PSSM conservation feature, all one-vs-rest at a z=2.0 hit
-    threshold. Writes ``out_tsv`` and returns the assembled DataFrame.
+    """
+    Run the full odds-ratio test battery and write the result TSV.
     """
     sequence_feature = ['wild_to_mutant', 'wild_to_mutant_property_change',
                         'wild_amino_acid', 'wild_amino_acid_properties',
@@ -324,7 +278,7 @@ def get_mutation_level_OR_table_tsv(
 
 
 # ---------------------------------------------------------------------------
-# Forest-plot remap dictionaries (NB2 cell 14; E-15 duplicate key removed)
+# Forest-plot remap dictionaries
 # ---------------------------------------------------------------------------
 
 FEATURE_NAME_REMAP = {
@@ -447,7 +401,9 @@ SUPPL_STRUCTURAL_FEATURES_ORDER_MAP = {
 
 def _prep_forest_df(df: pd.DataFrame, feature_name_remap, category_remap,
                     or_pthreshold: float) -> pd.DataFrame:
-    """Shared forest-plot preprocessing: remap, log2-transform, color-code."""
+    """
+    Shared forest-plot preprocessing: remap, log2-transform, color-code.
+    """
     df = df.replace(feature_name_remap).replace(category_remap)
     df['name_for_plot'] = '(' + df['FeatureName'] + ') ' + df['Category']
     df['log_OR'] = np.log2(df['odds_ratio'])
@@ -478,7 +434,9 @@ def plot_all_odds_ratio_manuscript_mainfigure(
     main_order_map: Dict = MAIN_ORDER_MAP,
     or_pthreshold: float = 0.05,
 ) -> None:
-    """Multi-panel main-figure forest plot of log2 odds ratios with CIs."""
+    """
+    Multi-panel main-figure forest plot of log2 odds ratios with CIs.
+    """
     df = pd.read_csv(odds_ratio_test_result_tsv, sep='\t')
     df = _prep_forest_df(df, feature_name_remap, category_remap, or_pthreshold)
 
@@ -507,7 +465,6 @@ def plot_all_odds_ratio_manuscript_mainfigure(
     for j, feature in enumerate(unique_features):
         gcont = df[df['FeatureName'] == feature].reset_index(drop=True)
         ax = axs[j]
-        import seaborn as sns
         sns.pointplot(data=gcont, x='log_OR', y='name_for_plot', dodge=True,
                       capsize=0.2, err_kws={'linewidth': 1.5}, linestyle='none',
                       markersize=4, ax=ax)
@@ -533,8 +490,9 @@ def plot_all_odds_ratio_manuscript_mainfigure(
 
 def plot_group(df_group: pd.DataFrame, order_map: Dict, out_svg: Union[str, Path],
                figsize=(4, 3.5), xlim=(-6, 6)) -> None:
-    """One forest-plot panel for a subset of features (NB2 ``plot_group``)."""
-    import seaborn as sns
+    """
+    One forest-plot panel for a subset of features.
+    """
     df_group = df_group.copy()
     df_group['Order'] = df_group.apply(
         lambda r: order_map.get((r['FeatureName'], r['Category']), np.nan), axis=1)
@@ -575,7 +533,9 @@ def plot_all_odds_ratio_manuscript_suppl(
     suppl_structural_features_order_map: Dict = SUPPL_STRUCTURAL_FEATURES_ORDER_MAP,
     or_pthreshold: float = 0.05,
 ) -> None:
-    """Supplemental forest plots: wild-AA, mutant-AA and structural-feature groups."""
+    """
+    Supplemental forest plots: wild-AA, mutant-AA and structural-feature groups.
+    """
     df = pd.read_csv(odds_ratio_test_result_tsv, sep='\t', quotechar='"')
     df = _prep_forest_df(df, feature_name_remap, category_remap, or_pthreshold)
     selected = ['Wild amino acid', 'Mutant amino acid', 'Structural region',
@@ -659,20 +619,9 @@ def plot_distplot_on_wild_to_mutant_merged_v4(
     width_cm: float = 0.7,
     col_order_pref=('Cys to Arg', 'Leu to Pro', 'Trp to Arg', 'Others'),
 ) -> None:
-    """Hit vs non-hit histograms faceted by wild->mutant substitution class.
-
-    NB2 defined this function twice (errors.md E-13): a cell-21 version that
-    was actually called (cell 22, the only call site in the notebook) and a
-    cell-23 redefinition that came *after* that call and was therefore never
-    executed for any real output. There is no old figure to check either
-    version against (this whole odds-ratio/forest-plot subsection has no
-    counterpart anywhere in ``previous_results/``). This port keeps the
-    cell-21 behavior as the default (no legend, one output file, the narrower
-    0.7cm panel width, ``Others`` sorted last) since that is what NB2 would
-    actually have produced if run top to bottom; ``add_legend``/``save_png``
-    let a caller opt into the cell-23 look if ever wanted.
     """
-    import seaborn as sns
+    Hit vs non-hit histograms faceted by wild->mutant substitution class.
+    """
     df = df[[label, 'wild_to_mutant']].copy()
     remapper = {'CtoR': 'Cys to Arg', 'LtoP': 'Leu to Pro', 'WtoR': 'Trp to Arg'}
     df['wild_to_mutant'] = df['wild_to_mutant'].map(lambda x: remapper.get(x, 'Others'))
@@ -750,8 +699,9 @@ def plot_distplot_on_structural_regions_v4(
     out_svg: Optional[Union[str, Path]] = 'Histogram_structural_region',
     bins=40, histtype: str = 'step', annotate_stats: bool = True, min_group_n: int = 5,
 ) -> None:
-    """Hit vs non-hit histograms faceted by structural region (core/interface/...)."""
-    import seaborn as sns
+    """
+    Hit vs non-hit histograms faceted by structural region (core/interface/...).
+    """
     df = df[[label, '3_region1']].copy()
     region_remap = {'core': 'Core', 'interface': 'Interface', 'surface': 'Surface',
                     'unstructured/noASA': 'Unstructured/noASA'}
@@ -819,8 +769,9 @@ def plot_sub_matrix_on_all_merged(
     odds_ratio_test_tsv: Union[str, Path],
     out_svg: Union[str, Path] = 'Substitution_matrix.svg',
 ) -> None:
-    """Side-by-side 20x20 substitution-matrix heatmaps of odds ratio and significance."""
-    import seaborn as sns
+    """
+    Side-by-side 20x20 substitution-matrix heatmaps of odds ratio and significance.
+    """
     odds_ratio_test_pd = pd.read_csv(odds_ratio_test_tsv, sep='\t')
     df = odds_ratio_test_pd[odds_ratio_test_pd['FeatureName'] == 'wild_to_mutant'].copy()
     df = df[['Category', 'odds_ratio', 'adjusted_p_value']].rename(
@@ -937,11 +888,11 @@ def plot_model_quantile_boxplot_v2(
     stripplot_kws: Optional[Dict] = None,
     boxplot_kws: Optional[Dict] = None,
 ) -> Optional[pd.DataFrame]:
-    """Quantile-stratified boxplots with overlaid per-gene stripplots per model.
+    """
+    Quantile-stratified boxplots with overlaid per-gene stripplots per model.
 
     Returns the Mann-Whitney comparison DataFrame (with star annotations).
     """
-    import seaborn as sns
     if name_dict is None:
         name_dict = {'FoldX_AVG_total_energy_AF3': 'FoldX', 'thermompnn_ddg_AF3': 'ThermoMPNN'}
     if model_order is None:
@@ -1082,13 +1033,9 @@ def get_violin_plot_sgrna_level_v2(
     DESTABILIZING_COLOR: str = "#DC3220",
     predictors: Optional[List[Tuple[str, str]]] = None,
 ) -> None:
-    """Split-violin plots of dDDG predictors for hit vs non-hit variants per model.
-
-    Colored by stability direction (blue stabilizing / red destabilizing) with
-    per-predictor Mann-Whitney U tests. This function has no ``be_scan``
-    equivalent and is preserved here.
     """
-    import seaborn as sns
+    Split-violin plots of dDDG predictors for hit vs non-hit variants per model.
+    """
     if predictors is None:
         predictors = [('FoldX_AVG_total_energy_AF3', 'FoldX'),
                       ('thermompnn_ddg_AF3', 'ThermoMPNN')]

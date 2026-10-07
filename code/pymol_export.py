@@ -1,24 +1,3 @@
-"""
-Residue-score -> PyMOL b-factor ``.txt`` export pipeline.
-
-Ports the PyMOL-mapping cells of ``251122_bescan_Plots_Github.ipynb`` (NB1
-cells 60-76) into reusable functions, styled to match ``code/data_loading.py``.
-
-Each exported ``.txt`` file holds one value per line, in ascending residue
-order, with no header -- exactly what ``load_bfact.py`` expects to read back
-into a PyMOL session and write into the b-factor column of ``6wkr.pdb`` (or a
-per-gene structure) for surface coloring.
-
-Two pieces of bookkeeping used to be copy-pasted several times in NB1 and are
-consolidated here:
-
-* ``build_complete_scaffold`` -- the "complete 1..N residue" DataFrame that NB1
-  rebuilt inline in cells 63, 66, 69 and 72.
-* ``remap_to_pdb_numbering`` -- the EZH2 isoform-2->isoform-1 offset and the
-  AEBP2 truncation, which NB1 implemented three slightly different ways across
-  the PyMOL-export cells (64, 67) and the PWES cell (81). See errors.md E-11.
-"""
-
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Union
 
@@ -29,7 +8,7 @@ from . import config
 
 
 # ---------------------------------------------------------------------------
-# Per-residue reshaping helpers (NB1 cell 61)
+# Per-residue reshaping helpers
 # ---------------------------------------------------------------------------
 
 def filter_data(
@@ -38,11 +17,8 @@ def filter_data(
     pos_col: str,
     common_cols: Sequence[str] = ("Gene Symbol", "pos"),
 ) -> pd.DataFrame:
-    """Keep positive-position rows and floor the position to an integer residue.
-
-    Equivalent to NB1's ``filter_data``: drops rows whose ``pos_col`` is <= 0,
-    floors the (possibly fractional) position into an integer ``pos`` column,
-    and returns only ``common_cols`` plus ``value_col``.
+    """
+    Keep positive-position rows and floor the position to an integer residue.
 
     Args:
         df: sgRNA-level table for one condition.
@@ -67,12 +43,8 @@ def merge_full_df(
     common_cols: Sequence[str] = ("Gene Symbol", "pos"),
     scale: Optional[float] = None,
 ) -> pd.DataFrame:
-    """Collapse to one row per residue and fill the missing residues with 0.
-
-    Equivalent to NB1's ``merge_full_df``: takes the per-residue maximum of
-    ``value_col``, left-merges it onto the complete 1..N scaffold so every
-    residue is present, replaces NaN and negative values with 0, and
-    optionally min-max scales the result to ``[0, scale]``.
+    """
+    Collapse to one row per residue and fill the missing residues with 0.
 
     Args:
         df: filtered sgRNA-level table (see :func:`filter_data`).
@@ -102,10 +74,8 @@ def build_complete_scaffold(
     genes: Sequence[str],
     protein_lengths: Optional[Dict[str, int]] = None,
 ) -> pd.DataFrame:
-    """The complete ``Gene Symbol`` x 1..N residue scaffold for a set of genes.
-
-    Replaces the four inline copies of this construction in NB1 (cells 63, 66,
-    69, 72). One row per residue, positions 1..``protein_lengths[gene]``.
+    """
+    The complete ``Gene Symbol`` x 1..N residue scaffold for a set of genes.
 
     Args:
         genes: the genes to include.
@@ -136,24 +106,8 @@ def remap_to_pdb_numbering(
     pos_col: str = "pos",
     shift: bool = False,
 ) -> pd.DataFrame:
-    """Remap screen residue numbering onto the 6WKR PDB numbering.
-
-    Consolidates the three slightly different inline implementations NB1 used
-    (PyMOL-export cells 64/67 and PWES cell 81) into one helper. Two genes need
-    adjustment:
-
-    * **EZH2** was screened as isoform 2, which carries a 5-residue insertion
-      (positions 299-303) absent from the isoform-1 structure. Those five
-      positions are always dropped. When ``shift`` is True, every position
-      after the insertion (``pos`` > 303) is additionally shifted down by 5 so
-      the numbers line up with the PDB chain -- this is required when residue
-      numbers are used as a key (the PWES pipeline, cell 81). For the dense
-      "complete scaffold" ``.txt`` export (cells 64/67), only the ordered value
-      column is written, so ``shift`` is left False and dropping the five rows
-      is sufficient.
-    * **AEBP2** is truncated to residues <= 503 for PDB purposes.
-
-    Other genes pass through unchanged.
+    """
+    Remap screen residue numbering onto the 6WKR PDB numbering.
 
     Args:
         df: a table with a gene column and an integer position column.
@@ -199,12 +153,8 @@ def export_scores_to_txt(
     pos_col: str = "pos",
     apply_pdb_remap: bool = True,
 ) -> Dict[str, Path]:
-    """Write one ``.txt`` of per-residue values per gene, in residue order.
-
-    For each gene, optionally applies :func:`remap_to_pdb_numbering` (drop-only,
-    matching NB1 cells 64/67/76), then writes the ``value_col`` column -- one
-    value per line, ascending residue order, no header/index -- to
-    ``out_dir/<name_template.format(gene=gene)>``.
+    """
+    Write one ``.txt`` of per-residue values per gene, in residue order.
 
     Args:
         df: a residue-level scaffold table (see :func:`merge_full_df`).

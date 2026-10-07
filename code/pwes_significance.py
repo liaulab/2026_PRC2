@@ -1,38 +1,3 @@
-"""
-Permutation-significance test for PWES clusters (the `df_wap` /
-`df_pwes_shuffled_sums` / `df_summary` / `df_summary_revised` /
-`WAP_histograms.png` / `aas_dict_FullPDB.pml` outputs of the old
-Figure4_PWES_* folders).
-
-Why this module exists
------------------------
-251122_bescan_Plots_Github.ipynb ("NB1") does not contain the code that
-produced these files -- they exist only as outputs in
-previous_results/Figure4_PWES_*/. The definitions below were
-reverse-engineered from those outputs and reproduce them exactly for the
-LOF+Stability run (see errors.md, "Output-parity pass"):
-
-  obs_wap(cluster)  = sum over residue pairs i<j inside the cluster of
-                      |PWES_ij|, where PWES = df_pairwise * df_gauss
-                      (i.e. df_pwes_unsorted from be_scan.pwes_clustering).
-  null iteration i  = np.random.seed(i); p = np.random.permutation(n);
-                      PWES* = df_pairwise[p][:, p] * df_gauss, then the same
-                      cluster sum. This is exactly be_scan's shuffle_pwes()
-                      permutation scheme, run for n_perm iterations.
-  mean / std        = mean and sample std (ddof=1) of the null.
-  95ci_min / max    = 2.5th / 97.5th percentiles of the null.
-  obs_gt            = number of null iterations strictly greater than obs.
-  1t_pval           = obs_gt / n_perm.
-  df_summary_revised adds a Bonferroni test across clusters:
-  "Signficiant at 0.05" (sic, the old column name) = p * n_clusters < 0.05,
-  and "Signficiance" (sic) stars from the Bonferroni-adjusted p:
-  **** < 1e-4, *** < 1e-3, ** < 1e-2, * < 0.05, else ns. (Only "****",
-  "*" and "ns" occur in the old files, so the ** / *** cut-offs are the
-  conventional ones, not verified.)
-  df_pwes_shuffled_sums = element-wise mean of the n_perm shuffled PWES
-                      matrices, in df_pwes_unsorted row/column order.
-"""
-
 import math
 
 import numpy as np
@@ -42,7 +7,8 @@ import matplotlib.pyplot as plt
 
 def pwes_permutation_test(df_pairwise, df_gauss, df_clus, label_col="label",
                           cluster_col="cl_new", n_perm=10000):
-    """Run the cluster-WAP permutation test.
+    """
+    Run the cluster-WAP permutation test.
 
     df_pairwise : the `_df_pairwise.csv` frame from pwes_clustering (rows and
                   columns in df_clus[label_col] order; its own index may be
@@ -106,8 +72,9 @@ def pwes_permutation_test(df_pairwise, df_gauss, df_clus, label_col="label",
 
 
 def plot_wap_histograms(df_wap, out_png, ncols=3, bins=30):
-    """Grid of null-WAP histograms with the observed WAP as a red dashed line
-    (layout of the old *_WAP_histograms.png)."""
+    """
+    Grid of null-WAP histograms with the observed WAP as a red dashed line
+    """
     iters = df_wap.filter(like="iter").values
     k = len(df_wap)
     nrows = math.ceil(k / ncols)
